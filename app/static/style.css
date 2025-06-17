@@ -1,0 +1,60 @@
+body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f7f9fc;
+    }
+
+    .sidebar {
+      min-height: 100vh;
+      background-color: #1e1e2f;
+      color: white;
+    }
+
+    .sidebar h2 {
+      padding: 1rem;
+      font-size: 1.5rem;
+      border-bottom: 1px solid #444;
+    }
+
+    .sidebar a {
+      color: #ccc;
+      text-decoration: none;
+      display: block;
+      padding: 1rem;
+    }
+
+    .sidebar a:hover {
+      background-color: #333;
+      color: white;
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .form-control, .form-select {
+      border-radius: 8px;
+    }
+
+    .transaction-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .transaction-item:last-child {
+      border-bottom: none;
+    }
+
+    .transaction-type {
+      font-size: 0.875rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 5px;
+      background-color: #e9ecef;
+    }
+
+    .content-wrapper {
+      padding: 2rem;
+    }
