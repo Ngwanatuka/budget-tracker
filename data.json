@@ -1,0 +1,24 @@
+[
+  {
+    "description": "Income",
+    "amount": 1000.0,
+    "type": "income"
+  },
+  {
+    "description": "Clothes",
+    "amount": 500.0,
+    "type": "expense"
+  },
+  {
+    "description": "Uber",
+    "amount": 120.0,
+    "type": "expense",
+    "category": "Transport"
+  },
+  {
+    "description": "Movies",
+    "amount": 380.0,
+    "type": "expense",
+    "category": "Entertainment"
+  }
+]

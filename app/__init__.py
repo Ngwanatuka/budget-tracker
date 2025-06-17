@@ -2,8 +2,9 @@ from flask import Flask
 
 def create_app():
     app = Flask(__name__)
-    
-    from .routes import bp
-    app.register_blueprint(bp)
+    app.secrete_key = 'secret'
+
+    from . import routes
+    app.register_blueprint(routes.bp)
 
     return app
