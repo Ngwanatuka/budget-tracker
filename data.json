@@ -26,5 +26,17 @@
     "amount": 200.0,
     "type": "income",
     "category": "Other"
+  },
+  {
+    "description": "Income",
+    "amount": 2000.0,
+    "type": "income",
+    "category": "Transport"
+  },
+  {
+    "description": "Food",
+    "amount": 1500.0,
+    "type": "expense",
+    "category": "Food"
   }
 ]

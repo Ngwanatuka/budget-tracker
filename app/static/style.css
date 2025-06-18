@@ -1,74 +1,183 @@
+/* ===== Base Styles ===== */
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #f7f9fc;
+  background-color: var(--bg-color);
+  color: var(--text-color);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease;
+}
+
+/* ===== Color Variables ===== */
+:root {
+  /* Light Mode (default) */
+  --bg-color: #f7f9fc;
+  --bg-color-page: #ffffff;
+  --text-color: #000000;
+  --sidebar-bg: #1e1e2f;
+  --sidebar-text: #ccc;
+  --sidebar-hover: #333;
+  --card-bg: #ffffff;
+  --card-text: #333;
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  --border-color: #eee;
+  --input-bg: #ffffff;
+  --income-color: #10b981;
+  --expense-color: #ef4444;
+  --balance-color: #3b82f6;
+  --transaction-bg: #e9ecef;
+  --income-light: #d1fae5;
+  --expense-light: #fee2e2;
+  --box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25) !important;
+}
+
+[data-theme="dark"] {
+  /* Dark Mode */
+  --bg-color: #121218;
+  --bg-color-page: #40404e;
+  --text-color: #e0e0e0;
+  --sidebar-bg: #0f0f1a;
+  --sidebar-text: #a0a0a0;
+  --sidebar-hover: #252535;
+  --card-bg: #1e1e2d;
+  --card-text: #e0e0e0;
+  --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  --border-color: #2d2d3a;
+  --input-bg: #40404e;
+  --income-color: #77c2ae;
+  --expense-color: #bb7979;
+  --balance-color: #7a8fc7;
+  --transaction-bg: #2d2d3a;
+  --income-light: #064e3b;
+  --expense-light: #7f1d1d;
+  --border-form-dark: border: none !important;
+  --box-shadow: box-shadow: none !important;
+}
+
+/* ===== Layout Styles ===== */
+.d-flex {
+  background-color: var(--bg-color-page);
+  transition: background-color 0.3s ease;
+}
+
+.mb-4 {
+  color: var(--text-color);
+  transition: color 0.3s ease;
+}
+
+
+
+.row mb-4 {
+  color: var(--text-color);
+  background-color: var(--bag-color-page);
+  transition: color 0.3s ease;
 }
 
 .sidebar {
   min-height: 100vh;
-  background-color: #1e1e2f;
+  background-color: var(--sidebar-bg);
   color: white;
 }
 
 .sidebar h2 {
   padding: 1rem;
   font-size: 1.5rem;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid var(--border-color);
 }
 
 .sidebar a {
-  color: #ccc;
+  color: var(--sidebar-text);
   text-decoration: none;
   display: block;
   padding: 1rem;
 }
 
 .sidebar a:hover {
-  background-color: #333;
+  background-color: var(--sidebar-hover);
   color: white;
   border-radius: 10px 0 0 10px;
 }
-
 
 .sidebar a.active {
-  background-color: #333;
+  background-color: var(--sidebar-hover);
   color: white;
   border-left: 3px solid #4f46e5;
-  /* Indigo accent */
   border-radius: 10px 0 0 10px;
 }
 
+.content-wrapper {
+  padding: 2rem;
+  background-color: var(--bg-color-page);
+  transition: background-color 0.3s ease;
+}
+
+/* ===== Card Styles ===== */
 .card {
+  background-color: var(--card-bg);
+  color: var(--card-text);
   border: none;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-}
-
-.card {
+  box-shadow: var(--card-shadow);
   border-left: 4px solid transparent;
+  transition: all 0.3s ease;
 }
-
-.card:nth-child(1) { border-left-color: #10b981; } /* Income */
-.card:nth-child(2) { border-left-color: #ef4444; } /* Expenses */
-.card:nth-child(3) { border-left-color: #3b82f6; } /* Balance */
 
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
 }
 
-.form-control,
-.form-select {
+.card:nth-child(1) { border-left-color: var(--income-color); }
+.card:nth-child(2) { border-left-color: var(--expense-color); }
+.card:nth-child(3) {
+   border-left-color: var(--balance-color); 
+   background-color: var(--card-bg);
+  }
+
+/* ===== Form Styles ===== */
+.form-control, 
+.form-select,
+.form-control::placeholder {
+  background-color: var(--input-bg) !important;
+  color: var(--text-color) !important;
+
   border-radius: 8px;
 }
 
+/* Fix for placeholder text */
+.form-control::placeholder {
+  color: var(--text-color) !important;
+  opacity: 0.7 !important;
+}
+
+/* Fix for dropdown options */
+.form-select option {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+}
+
+/* Fix for focused state */
+.form-control:focus, 
+.form-select:focus {
+  /* background-color: var(--input-bg) !important; */
+  color: var(--text-color) !important;
+  border-color: var(--income-color) !important;
+  box-shadow: var(--box-shadow);
+}
+
+/* Fix for labels */
+.form-label {
+  color: var(--text-color) !important;
+}
+
+/* ===== Transaction Styles ===== */
 .transaction-item {
   display: flex;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--card-bg);
+  color: var(--card-text);
 }
 
 .transaction-item:last-child {
@@ -79,49 +188,110 @@ body {
   font-size: 0.875rem;
   padding: 0.25rem 0.5rem;
   border-radius: 5px;
-  background-color: #e9ecef;
 }
 
 .transaction-type.income {
-  background-color: #d1fae5;
-  /* Light green */
-  color: #065f46;
-  /* Dark green */
+  background-color: var(--income-light);
+  color: var(--text-color);
 }
 
 .transaction-type.expense {
-  background-color: #fee2e2;
-  /* Light red */
-  color: #b91c1c;
-  /* Dark red */
+  background-color: var(--expense-light);
+  color: var(--text-color);
 }
 
-.content-wrapper {
-  padding: 2rem;
-}
-
-
+/* ===== Button Styles ===== */
 .btn-success {
-  background-color: #10b981;
-  /* Emerald green */
+  background-color: var(--income-color);
   border: none;
   border-radius: 8px;
   padding: 0.5rem 1rem;
+  color: white;
 }
 
 .btn-success:hover {
   background-color: #0d9f6e;
 }
 
-/* Responsive styles */
-
+/* ===== Responsive Styles ===== */
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
     min-height: auto;
   }
-
   .d-flex {
     flex-direction: column;
   }
+}
+
+/* ===== Transition Effects ===== */
+body, .card, .form-control, .form-select, 
+.transaction-item, .sidebar a {
+  transition: background-color 0.3s ease, 
+              color 0.2s ease, 
+              border-color 0.3s ease;
+}
+
+/* Special card types */
+.income-card {
+  background-color: var(--card-bg)!important;
+  border-left: 4px solid var(--income-color) !important;
+}
+
+.expense-card {
+  background-color: var(--card-bg)!important;
+  border-left: 4px solid var(--expense-color) !important;
+}
+
+.balance-card {
+  background-color: var(--card-bg)!important;
+  border-left: 4px solid var(--balance-color) !important;
+}
+
+/* Ensure text is readable in all modes */
+.card h5, .card h3 {
+  color: var(--card-text);
+  background-color: var(--card-bg);
+  transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.card {
+  background-color: var(--card-bg) !important;
+  color: var(--card-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Settings Dropdown Styles */
+.settings-menu {
+  position: relative;
+}
+
+.settings-dropdown {
+  display: none;
+  background-color: var(--sidebar-bg);
+  padding: 0.5rem 0;
+  border-radius: 0 0 8px 8px;
+  margin-top: -5px;
+}
+
+.settings-dropdown.show {
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+.settings-menu a {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dropdown-arrow {
+  font-size: 0.8em;
+  margin-left: 5px;
+  transition: transform 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

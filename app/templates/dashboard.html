@@ -6,7 +6,6 @@
     <title>Budget Tracker</title>
     <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
 </head>
 
 <body>
@@ -16,7 +15,20 @@
             <h2>💰 BudgetApp</h2>
             <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Dashboard</a>
             <a href="#">Reports</a>
-            <a href="#">Settings</a>
+
+            <!-- Settings Dropdown -->
+            <div class="settings-menu">
+                <a href="#" id="settingsToggle">Settings <span class="dropdown-arrow">▼</span></a>
+                <div class="settings-dropdown">
+                    <div class="form-check form-switch ps-3 py-2">
+                        <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                        <label class="form-check-label" for="darkModeToggle">Dark Mode</label>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="#" class="dropdown-item ps-3 py-2">Notifications</a>
+                    <a href="#" class="dropdown-item ps-3 py-2">Currency</a>
+                </div>
+            </div>
         </div>
 
         <!-- Main Content -->
@@ -26,19 +38,19 @@
             <!-- Summary Cards -->
             <div class="row mb-4">
                 <div class="col-md-4">
-                    <div class="card text-dark bg-light p-3">
+                    <div class="card p-3 income-card">
                         <h5>Total Income</h5>
                         <h3>R {{ income }}</h3>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card text-dark bg-light p-3">
+                    <div class="card p-3 expense-card">
                         <h5>Total Expenses</h5>
                         <h3>R {{ expenses }}</h3>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card text-dark bg-light p-3">
+                    <div class="card p-3 balance-card">
                         <h5>Net Balance</h5>
                         <h3>R {{ balance }}</h3>
                     </div>
@@ -96,6 +108,27 @@
             </div>
         </div>
     </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <script>
+        // Settings dropdown toggle
+        document.getElementById('settingsToggle').addEventListener('click', function (e) {
+            e.preventDefault();
+            const dropdown = document.querySelector('.settings-dropdown');
+            const arrow = document.querySelector('.dropdown-arrow');
+
+            dropdown.classList.toggle('show');
+            arrow.textContent = dropdown.classList.contains('show') ? '▲' : '▼';
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (e) {
+            if (!e.target.closest('.settings-menu')) {
+                document.querySelector('.settings-dropdown').classList.remove('show');
+                document.querySelector('.dropdown-arrow').textContent = '▼';
+            }
+        });
+    </script>
 </body>
 
 </html>
