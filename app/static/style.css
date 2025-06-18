@@ -25,6 +25,15 @@ body {
     .sidebar a:hover {
       background-color: #333;
       color: white;
+      border-radius: 10px 0 0 10px;
+    }
+
+
+    .sidebar a.active {
+      background-color: #333;
+      color: white;
+      border-left: 3px solid #4f46e5; /* Indigo accent */
+      border-radius: 10px 0 0 10px;
     }
 
     .card {
