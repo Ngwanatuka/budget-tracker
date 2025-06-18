@@ -83,3 +83,14 @@ body {
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       transition: all 0.3s ease;
     }
+
+    .btn-success {
+      background-color: #10b981;  /* Emerald green */
+      border: none;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+    }
+    
+    .btn-success:hover {
+      background-color: #0d9f6e;
+    }

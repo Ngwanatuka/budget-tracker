@@ -20,5 +20,11 @@
     "amount": 380.0,
     "type": "expense",
     "category": "Entertainment"
+  },
+  {
+    "description": "Income",
+    "amount": 200.0,
+    "type": "income",
+    "category": "Other"
   }
 ]
