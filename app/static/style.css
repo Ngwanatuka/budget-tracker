@@ -55,6 +55,16 @@ body {
       background-color: #e9ecef;
     }
 
+    .transaction-type.income {
+      background-color: #d1fae5;  /* Light green */
+      color: #065f46;            /* Dark green */
+    }
+    
+    .transaction-type.expense {
+      background-color: #fee2e2;  /* Light red */
+      color: #b91c1c;            /* Dark red */
+    }
+
     .content-wrapper {
       padding: 2rem;
     }

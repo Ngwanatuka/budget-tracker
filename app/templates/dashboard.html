@@ -88,7 +88,7 @@
                 {% for t in transactions %}
                 <div class="transaction-item">
                     <span>{{ t.description }} - R {{ t.amount }}</span>
-                    <span class="transaction-type">{{ t.type }}</span>
+                    <span class="transaction-type {{ t.type }}">{{ t.type }}</span>
                 </div>
                 {% else %}
                 <p class="text-muted p-3">No transactions yet</p>
