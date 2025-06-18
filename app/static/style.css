@@ -1,108 +1,118 @@
 body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f7f9fc;
-    }
+  font-family: 'Inter', sans-serif;
+  background-color: #f7f9fc;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-    .sidebar {
-      min-height: 100vh;
-      background-color: #1e1e2f;
-      color: white;
-    }
+.sidebar {
+  min-height: 100vh;
+  background-color: #1e1e2f;
+  color: white;
+}
 
-    .sidebar h2 {
-      padding: 1rem;
-      font-size: 1.5rem;
-      border-bottom: 1px solid #444;
-    }
+.sidebar h2 {
+  padding: 1rem;
+  font-size: 1.5rem;
+  border-bottom: 1px solid #444;
+}
 
-    .sidebar a {
-      color: #ccc;
-      text-decoration: none;
-      display: block;
-      padding: 1rem;
-    }
+.sidebar a {
+  color: #ccc;
+  text-decoration: none;
+  display: block;
+  padding: 1rem;
+}
 
-    .sidebar a:hover {
-      background-color: #333;
-      color: white;
-      border-radius: 10px 0 0 10px;
-    }
+.sidebar a:hover {
+  background-color: #333;
+  color: white;
+  border-radius: 10px 0 0 10px;
+}
 
 
-    .sidebar a.active {
-      background-color: #333;
-      color: white;
-      border-left: 3px solid #4f46e5; /* Indigo accent */
-      border-radius: 10px 0 0 10px;
-    }
+.sidebar a.active {
+  background-color: #333;
+  color: white;
+  border-left: 3px solid #4f46e5;
+  /* Indigo accent */
+  border-radius: 10px 0 0 10px;
+}
 
-    .card {
-      border: none;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
 
-    .form-control, .form-select {
-      border-radius: 8px;
-    }
+.form-control,
+.form-select {
+  border-radius: 8px;
+}
 
-    .transaction-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid #eee;
-    }
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #eee;
+}
 
-    .transaction-item:last-child {
-      border-bottom: none;
-    }
+.transaction-item:last-child {
+  border-bottom: none;
+}
 
-    .transaction-type {
-      font-size: 0.875rem;
-      padding: 0.25rem 0.5rem;
-      border-radius: 5px;
-      background-color: #e9ecef;
-    }
+.transaction-type {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  background-color: #e9ecef;
+}
 
-    .transaction-type.income {
-      background-color: #d1fae5;  /* Light green */
-      color: #065f46;            /* Dark green */
-    }
-    
-    .transaction-type.expense {
-      background-color: #fee2e2;  /* Light red */
-      color: #b91c1c;            /* Dark red */
-    }
+.transaction-type.income {
+  background-color: #d1fae5;
+  /* Light green */
+  color: #065f46;
+  /* Dark green */
+}
 
-    .content-wrapper {
-      padding: 2rem;
-    }
+.transaction-type.expense {
+  background-color: #fee2e2;
+  /* Light red */
+  color: #b91c1c;
+  /* Dark red */
+}
 
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-    }
+.content-wrapper {
+  padding: 2rem;
+}
 
-    .btn-success {
-      background-color: #10b981;  /* Emerald green */
-      border: none;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-    }
-    
-    .btn-success:hover {
-      background-color: #0d9f6e;
-    }
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
 
-    /* Responsive styles */
-    
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 100%;
-        min-height: auto;
-      }
-      .d-flex {
-        flex-direction: column;
-      }
-    }
+.btn-success {
+  background-color: #10b981;
+  /* Emerald green */
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+}
+
+.btn-success:hover {
+  background-color: #0d9f6e;
+}
+
+/* Responsive styles */
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+
+  .d-flex {
+    flex-direction: column;
+  }
+}
