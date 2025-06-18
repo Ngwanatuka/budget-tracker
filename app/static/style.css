@@ -45,6 +45,20 @@ body {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
+.card {
+  border-left: 4px solid transparent;
+}
+
+.card:nth-child(1) { border-left-color: #10b981; } /* Income */
+.card:nth-child(2) { border-left-color: #ef4444; } /* Expenses */
+.card:nth-child(3) { border-left-color: #3b82f6; } /* Balance */
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
 .form-control,
 .form-select {
   border-radius: 8px;
@@ -86,11 +100,6 @@ body {
   padding: 2rem;
 }
 
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
 
 .btn-success {
   background-color: #10b981;
