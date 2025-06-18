@@ -94,3 +94,15 @@ body {
     .btn-success:hover {
       background-color: #0d9f6e;
     }
+
+    /* Responsive styles */
+    
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        min-height: auto;
+      }
+      .d-flex {
+        flex-direction: column;
+      }
+    }
