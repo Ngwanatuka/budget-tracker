@@ -94,3 +94,14 @@ def test_flash_success_message(self):
     }, follow_redirects=True)
 
     self.assertIntIn(b'Transaction added successfully', response.data)
+
+
+def test_flash_error_on_missing_description(self):
+    response = self.client.post('/add', data={
+        'description': '',
+        'amount': '100',
+        'type': 'income',
+        'category': 'Food'
+    }, follow_redirects=True)
+
+    self.assertIn(b'Description is required', response.data)
