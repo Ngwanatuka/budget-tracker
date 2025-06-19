@@ -84,3 +84,13 @@ class BudgetAppTestCase(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'Transaction added successfully!', response.data)
+
+def test_flash_success_message(self):
+    response = self.client.post('/add', data={
+        'description': 'Test success',
+        'amount': '100',
+        'type': 'income',
+        'category': 'Food'
+    }, follow_redirects=True)
+
+    self.assertIntIn(b'Transaction added successfully', response.data)
