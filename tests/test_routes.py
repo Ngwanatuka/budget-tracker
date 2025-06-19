@@ -71,3 +71,16 @@ class BudgetAppTestCase(unittest.TestCase):
             'category': ''
         }, follow_redirects=True)
         self.assertIn(b'Category is required', response.data)
+
+
+    def test_add_transaction_ignores_user_date_input(self):
+        response = self.client.post('/add', data={
+            'description': 'Ignore Date Field',
+            'amount': '150',
+            'type': 'income',
+            'category': 'Other',
+            'date': 'not-a-real-date'  # Should be ignored
+    }, follow_redirects=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Transaction added successfully!', response.data)
