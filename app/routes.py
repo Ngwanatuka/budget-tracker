@@ -65,8 +65,16 @@ def add_transaction():
             flash('Amount must be positive', 'error')
             return redirect(url_for('main.dashboard'))
             
-        t_type = request.form['type']
+        t_type = request.form['type'].strip().lower()
+        if t_type not in ['income', 'expense']:
+            flash('Invalid transaction type', 'error')
+            return redirect(url_for('main.dashboard'))
+        
         category = request.form['category'].strip()
+
+        if not category:
+            flash('Category is required', 'error')
+            return redirect(url_for('main.dashboard'))
         
         new_transaction = {
             'id': get_next_id(transactions),
