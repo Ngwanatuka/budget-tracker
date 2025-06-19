@@ -43,3 +43,21 @@ class BudgetAppTestCase(unittest.TestCase):
         }, follow_redirects=True)
         self.assertIn(b'Description is required', response.data)
 
+    def test_add_transaction_invalid_amount(self):
+        response = self.client.post('/add', data={
+            'description': 'Test Expense',
+            'amount': '-100',
+            'type': 'expense',
+            'category': 'Food'
+        }, follow_redirects=True)
+        self.assertIn(b'Amount must be positive', response.data)
+
+
+    def test_add_transaction_invalid_type(self):
+        response = self.client.post('/add', data={
+            'description': 'Test Transaction',
+            'amount': '1000',
+            'type': 'invalid_type',
+            'category': 'Other'
+        }, follow_redirects=True)
+        self.assertIn(b'Invalid transaction type', response.data)
