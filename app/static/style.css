@@ -320,7 +320,6 @@ body, .card, .form-control, .form-select,
 .card h5, .card h3 {
   color: var(--card-text);
   background-color: var(--card-bg);
-  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 .card {
