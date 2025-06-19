@@ -1,4 +1,79 @@
-// Combined Budget App with Dark Mode and Charts
+// ==================== Reset Functionality ====================
+function setupResetButton() {
+  const resetBtn = document.getElementById('resetDataBtn');
+  const resetModal = new bootstrap.Modal(document.getElementById('resetModal'));
+  const confirmReset = document.getElementById('confirmReset');
+
+  if (!resetBtn || !confirmReset) {
+    console.error("Reset elements not found");
+    return;
+  }
+
+  // Show modal when reset button is clicked
+  resetBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    resetModal.show();
+  });
+
+  // Handle actual reset when confirmed
+  confirmReset.addEventListener('click', () => {
+    resetAllData();
+    resetModal.hide();
+    showAlert('All data has been reset', 'success');
+  });
+}
+
+function resetAllData() {
+  try {
+    // 1. Clear transactions list
+    const transactionsContainer = document.querySelector('.card.p-3');
+    if (transactionsContainer) {
+      // Remove all transaction items
+      document.querySelectorAll('.transaction-item').forEach(el => el.remove());
+      
+      // Add empty state message if it doesn't exist
+      if (!transactionsContainer.querySelector('.text-muted')) {
+        const emptyMsg = document.createElement('p');
+        emptyMsg.className = 'text-muted p-3';
+        emptyMsg.textContent = 'No transactions yet';
+        transactionsContainer.appendChild(emptyMsg);
+      }
+    }
+
+    // 2. Reset summary cards
+    document.querySelectorAll('.income-card h3, .expense-card h3, .balance-card h3')
+      .forEach(el => el.textContent = 'R 0');
+
+    // 3. Reset charts
+    if (window.budgetCharts) {
+      // Clear chart data
+      window.budgetCharts.transactions = [];
+      window.budgetCharts.renderCharts();
+    }
+
+    console.log("Data reset complete");
+  } catch (error) {
+    console.error("Error during reset:", error);
+    showAlert('Error resetting data', 'danger');
+  }
+}
+
+function showAlert(message, type) {
+  const alertDiv = document.createElement('div');
+  alertDiv.className = `alert alert-${type} position-fixed top-0 start-50 translate-middle-x mt-3`;
+  alertDiv.style.zIndex = '1060';
+  alertDiv.textContent = message;
+  
+  document.body.appendChild(alertDiv);
+  
+  setTimeout(() => {
+    alertDiv.remove();
+  }, 3000);
+}
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
   // ==================== Dark Mode Toggle ====================
   const toggle = document.getElementById('darkModeToggle');
@@ -222,4 +297,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error("Error parsing transactions data:", e);
     }
   }
+
+  setupResetButton();
 });
