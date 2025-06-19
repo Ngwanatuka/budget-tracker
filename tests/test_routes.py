@@ -127,3 +127,17 @@ def test_dashboard_js_hooks_exist(self):
     self.assertIn('id="monthlyTrendChart"', html)
     self.assertIn('id="settingsToggle"', html)
 
+def test_transaction_displayed_on_dashboard(self):
+    # Add a transaction first
+    self.client.post('/add', data={
+        'description': 'Display test',
+        'amount': '123.45',
+        'type': 'income',
+        'category': 'Other'
+    }, follow_redirects=True)
+
+    # Then check it's on the dashboard
+    response = self.client.get('/')
+    html = response.data.decode()
+    self.assertIn('Display test', html)
+    self.assertIn('R 123.45', html)
