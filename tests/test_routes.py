@@ -116,3 +116,14 @@ def test_dashboard_ui_elements(self):
     self.assertIn('Net Balance', html)
     self.assertIn('Add', html)  # Submit button
     self.assertIn('Transaction Analytics', html)
+
+
+def test_dashboard_js_hooks_exist(self):
+    response = self.client.get('/')
+    html = response.data.decode()
+
+    self.assertIn('id="transactions-data"', html)
+    self.assertIn('id="categoryChart"', html)
+    self.assertIn('id="monthlyTrendChart"', html)
+    self.assertIn('id="settingsToggle"', html)
+
