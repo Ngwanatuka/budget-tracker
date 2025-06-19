@@ -1,97 +1,89 @@
-import json
-import os
-from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from .models import Transaction
+from . import db
+from datetime import datetime
+import json
 
 bp = Blueprint('main', __name__)
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), '..', 'data.json')
-
-def load_transactions():
-    try:
-        with open(DATA_FILE, 'r') as f:
-            return json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        return []
-
-def save_transactions(transactions):
-    with open(DATA_FILE, 'w') as f:
-        json.dump(transactions, f, indent=2)
-
-def get_next_id(transactions):
-    return max(t['id'] for t in transactions) + 1 if transactions else 1
-
 @bp.route('/')
 def dashboard():
-    transactions = load_transactions()
+    transactions = Transaction.query.order_by(Transaction.date.desc()).all()
     
-    # Calculate totals
-    income = sum(t['amount'] for t in transactions if t['type'] == 'income')
-    expenses = sum(t['amount'] for t in transactions if t['type'] == 'expense')
+    income = sum(t.amount for t in transactions if t.type == 'income')
+    expenses = sum(t.amount for t in transactions if t.type == 'expense')
     balance = income - expenses
-    
-    # Prepare data for JavaScript
+
     transactions_data = json.dumps([
         {
-            'id': t['id'],
-            'description': t['description'],
-            'amount': t['amount'],
-            'type': t['type'],
-            'category': t['category'],
-            'date': t.get('date', '')  # Safely handle missing date
+            'id': t.id,
+            'description': t.description,
+            'amount': t.amount,
+            'type': t.type,
+            'category': t.category,
+            'date': t.date.isoformat()
         }
         for t in transactions
     ])
-    
+
     return render_template('dashboard.html',
-                         transactions=transactions,
-                         income=income,
-                         expenses=expenses,
-                         balance=balance,
-                         transactions_data=transactions_data)
+                           transactions=transactions,
+                           income=income,
+                           expenses=expenses,
+                           balance=balance,
+                           transactions_data=transactions_data)
+
+
+@bp.route('/reset', methods=['POST'])
+def reset_data():
+    try:
+        Transaction.query.delete()
+        db.session.commit()
+        flash('All data has been reset.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('Error resetting data.', 'error')
+
+    return redirect(url_for('main.dashboard'))
+
+
 
 @bp.route('/add', methods=['POST'])
 def add_transaction():
-    transactions = load_transactions()
-    
     try:
         description = request.form['description'].strip()
         if not description:
             flash('Description is required', 'error')
             return redirect(url_for('main.dashboard'))
-            
+
         amount = float(request.form['amount'])
         if amount <= 0:
             flash('Amount must be positive', 'error')
             return redirect(url_for('main.dashboard'))
-            
+
         t_type = request.form['type'].strip().lower()
         if t_type not in ['income', 'expense']:
             flash('Invalid transaction type', 'error')
             return redirect(url_for('main.dashboard'))
-        
-        category = request.form['category'].strip()
 
+        category = request.form['category'].strip()
         if not category:
             flash('Category is required', 'error')
             return redirect(url_for('main.dashboard'))
-        
-        new_transaction = {
-            'id': get_next_id(transactions),
-            'description': description,
-            'amount': amount,
-            'type': t_type,
-            'category': category,
-            'date': datetime.now().isoformat()
-        }
 
-        transactions.append(new_transaction)
-        save_transactions(transactions)
+        new_transaction = Transaction(
+            description=description,
+            amount=amount,
+            type=t_type,
+            category=category,
+            date=datetime.utcnow()
+        )
+
+        db.session.add(new_transaction)
+        db.session.commit()
         flash('Transaction added successfully!', 'success')
-        
+
     except ValueError:
         flash('Invalid amount format', 'error')
-    except KeyError as e:
-        flash(f'Missing required field: {e}', 'error')
 
     return redirect(url_for('main.dashboard'))

@@ -141,3 +141,5 @@ def test_transaction_displayed_on_dashboard(self):
     html = response.data.decode()
     self.assertIn('Display test', html)
     self.assertIn('R 123.45', html)
+
+

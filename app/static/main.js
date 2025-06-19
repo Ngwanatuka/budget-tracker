@@ -16,11 +16,18 @@ function setupResetButton() {
   });
 
   // Handle actual reset when confirmed
-  confirmReset.addEventListener('click', () => {
-    resetAllData();
-    resetModal.hide();
-    showAlert('All data has been reset', 'success');
-  });
+confirmReset.addEventListener('click', () => {
+    fetch("/reset", {
+        method: "POST"
+    }).then(() => {
+        resetModal.hide();
+        window.location.reload(); // Now refresh pulls empty state from the DB
+    }).catch(error => {
+        console.error("Reset failed:", error);
+        showAlert("Reset failed. Try again.", "danger");
+    });
+});
+
 }
 
 function resetAllData() {
