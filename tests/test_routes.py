@@ -105,3 +105,14 @@ def test_flash_error_on_missing_description(self):
     }, follow_redirects=True)
 
     self.assertIn(b'Description is required', response.data)
+
+
+def test_dashboard_ui_elements(self):
+    response = self.client.get('/')
+    html = response.data.decode()
+
+    self.assertIn('Total Income', html)
+    self.assertIn('Total Expenses', html)
+    self.assertIn('Net Balance', html)
+    self.assertIn('Add', html)  # Submit button
+    self.assertIn('Transaction Analytics', html)
