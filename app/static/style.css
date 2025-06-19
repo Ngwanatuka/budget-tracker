@@ -406,3 +406,28 @@ h5 { font-size: 1.25rem; line-height: 1.5; }
   h1 { font-size: 2rem; }
   h2 { font-size: 1.75rem; }
 }
+
+/* Focus Styles */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--balance-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Skip to Content Link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  padding: 1rem;
+  background: var(--card-bg);
+  color: var(--text-color);
+  z-index: 9999;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+}

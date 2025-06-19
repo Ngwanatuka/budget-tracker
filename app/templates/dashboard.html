@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <a href="#main-content" class="skip-link">Skip to Content</a>
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar p-3">
@@ -62,9 +63,10 @@
                 <form method="POST" action="/add">
                     <div class="row g-3">
                         <div class="col-md-4">
-                            <input type="text" class="form-control" name="description" placeholder="Description" required>
+                            <input type="text" class="form-control" name="description" placeholder="Description"
+                                required>
                             <div class="error-message">Please enter a description</div>
-                          </div>
+                        </div>
                         <div class="col-md-3">
                             <input type="number" class="form-control" name="amount" placeholder="Amount" step="0.01"
                                 required>
