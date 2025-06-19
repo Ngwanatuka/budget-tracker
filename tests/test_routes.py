@@ -61,3 +61,13 @@ class BudgetAppTestCase(unittest.TestCase):
             'category': 'Other'
         }, follow_redirects=True)
         self.assertIn(b'Invalid transaction type', response.data)
+
+
+    def test_add_transaction_invalid_category(self):
+        response = self.client.post('/add', data={
+            'description': 'Test Transaction',
+            'amount': '1000',
+            'type': 'expense',
+            'category': ''
+        }, follow_redirects=True)
+        self.assertIn(b'Category is required', response.data)
