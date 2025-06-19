@@ -1,42 +1,10 @@
 [
   {
-    "description": "Income",
-    "amount": 1000.0,
-    "type": "income"
-  },
-  {
-    "description": "Clothes",
-    "amount": 500.0,
-    "type": "expense"
-  },
-  {
-    "description": "Uber",
-    "amount": 120.0,
-    "type": "expense",
-    "category": "Transport"
-  },
-  {
-    "description": "Movies",
-    "amount": 380.0,
-    "type": "expense",
-    "category": "Entertainment"
-  },
-  {
-    "description": "Income",
-    "amount": 200.0,
-    "type": "income",
-    "category": "Other"
-  },
-  {
-    "description": "Income",
+    "id": 1,
+    "description": "Food",
     "amount": 2000.0,
     "type": "income",
-    "category": "Transport"
-  },
-  {
-    "description": "Food",
-    "amount": 1500.0,
-    "type": "expense",
-    "category": "Food"
+    "category": "Food",
+    "date": "2025-06-19T11:34:02.557907"
   }
 ]
