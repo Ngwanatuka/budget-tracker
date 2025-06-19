@@ -104,7 +104,7 @@ body {
 
 
 
-.row mb-4 {
+.row.mb-4 {
   color: var(--text-color);
   background-color: var(--bag-color-page);
   transition: color 0.3s ease;
