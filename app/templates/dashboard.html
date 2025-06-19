@@ -101,9 +101,11 @@
                 <h5>Recent Transactions</h5>
                 {% for t in transactions %}
                 <div class="transaction-item">
-                    <span>{{ t.description }} - R {{ t.amount }}</span>
+                    <span class="transaction-desc">{{ t.description }}</span>
+                    <span class="transaction-category">{{ t.category }}</span>
+                    <span class="transaction-amount {{ t.type }}">R {{ t.amount }}</span>
                     <span class="transaction-type {{ t.type }}">{{ t.type }}</span>
-                </div>
+                  </div>
                 {% else %}
                 <p class="text-muted p-3">No transactions yet</p>
                 {% endfor %}

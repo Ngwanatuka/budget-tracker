@@ -214,6 +214,15 @@ body {
   border-bottom: 1px solid var(--border-color);
   background-color: var(--card-bg);
   color: var(--card-text);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  background-color: var(--transaction-bg);
+  transition: all 0.3s ease;
 }
 
 .transaction-item:last-child {
@@ -228,12 +237,34 @@ body {
 
 .transaction-type.income {
   background-color: var(--income-light);
-  color: var(--text-color);
+  color: var(--income-color);
 }
 
 .transaction-type.expense {
   background-color: var(--expense-light);
   color: var(--text-color);
+}
+
+.transaction-item:hover {
+  transform: translateX(5px);
+}
+
+.transaction-amount {
+  font-weight: 600;
+  text-align: right;
+}
+
+.transaction-amount.income {
+  color: var(--income-color);
+}
+
+.transaction-amount.expense {
+  color: var(--expense-color);
+}
+
+.transaction-category {
+  font-size: 0.875rem;
+  opacity: 0.8;
 }
 
 /* ===== Button Styles ===== */
