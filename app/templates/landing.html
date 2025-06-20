@@ -52,6 +52,23 @@
             width: 100% !important;
             height: auto !important;
         }
+
+        /* Default size: normal buttons */
+        .navbar .btn {
+            font-size: 1rem;
+            /* normal size */
+            padding: 0.5rem 1rem;
+        }
+
+        /* Smaller buttons on small screens (phones) */
+        @media (max-width: 575.98px) {
+            .navbar .btn {
+                font-size: 0.8rem;
+                /* slightly smaller font */
+                padding: 0.25rem 0.6rem;
+                /* less padding */
+            }
+        }
     </style>
 </head>
 
