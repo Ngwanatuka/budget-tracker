@@ -6,7 +6,7 @@ import json
 
 bp = Blueprint('main', __name__)
 
-@bp.route('/')
+@bp.route('/dashboard')
 def dashboard():
     transactions = Transaction.query.order_by(Transaction.date.desc()).all()
     
@@ -32,6 +32,11 @@ def dashboard():
                            expenses=expenses,
                            balance=balance,
                            transactions_data=transactions_data)
+
+
+@bp.route('/')
+def landing():
+    return render_template('landing.html', datetime=datetime)
 
 
 @bp.route('/reset', methods=['POST'])
