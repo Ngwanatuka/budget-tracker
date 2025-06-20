@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from .models import Transaction
+from flask_login import login_required, current_user
+from app.models.transaction import Transaction
 from . import db
 from datetime import datetime
 import json
@@ -7,8 +8,9 @@ import json
 bp = Blueprint('main', __name__)
 
 @bp.route('/dashboard')
+@login_required
 def dashboard():
-    transactions = Transaction.query.order_by(Transaction.date.desc()).all()
+    transactions = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.date.desc()).all()
     
     income = sum(t.amount for t in transactions if t.type == 'income')
     expenses = sum(t.amount for t in transactions if t.type == 'expense')
@@ -31,12 +33,18 @@ def dashboard():
                            income=income,
                            expenses=expenses,
                            balance=balance,
-                           transactions_data=transactions_data)
+                           transactions_data=transactions_data,
+                           user=current_user)
 
 
 @bp.route('/')
 def landing():
+    # If user is already logged in, redirect to dashboard
+    if current_user.is_authenticated:
+        return redirect(url_for('main.dashboard'))
     return render_template('landing.html', datetime=datetime)
+
+bp.add_url_rule('/', endpoint='index', view_func=landing)
 
 
 @bp.route('/reset', methods=['POST'])
@@ -50,7 +58,6 @@ def reset_data():
         flash('Error resetting data.', 'error')
 
     return redirect(url_for('main.dashboard'))
-
 
 
 @bp.route('/add', methods=['POST'])
@@ -81,7 +88,8 @@ def add_transaction():
             amount=amount,
             type=t_type,
             category=category,
-            date=datetime.utcnow()
+            date=datetime.utcnow(),
+            user=current_user
         )
 
         db.session.add(new_transaction)

@@ -35,6 +35,9 @@
                     <button id="resetDataBtn" class="dropdown-item ps-3 py-2 text-danger">
                         <i class="bi bi-trash"></i> Reset All Data
                     </button>
+
+                    <a href="{{ url_for('auth.logout') }}" class="dropdown-item ps-3 py-2 text-danger">Logout</a>
+
                 </div>
             </div>
         </div>
@@ -58,7 +61,7 @@
             {% endwith %}
 
 
-            <h1 class="mb-4">Welcome back, Moses 👋</h1>
+            <h1 class="mb-4">Welcome back, {{ current_user.username}} 👋</h1>
 
             <!-- Summary Cards -->
             <div class="row mb-4">
@@ -189,6 +192,22 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Auto-dismiss alerts after 4 seconds
+        document.addEventListener('DOMContentLoaded', () => {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    // Bootstrap 5 fade-out transition
+                    alert.classList.remove('show');
+                    alert.classList.add('fade');
+                    setTimeout(() => alert.remove(), 500); // wait for fade-out to complete
+                }, 2000); // 2 seconds
+            });
+        });
+    </script>
+
 </body>
 
 </html>
