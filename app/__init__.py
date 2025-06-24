@@ -22,6 +22,7 @@ def init_db_command():
 def create_app(test_config=None):
     app = Flask(__name__)
     app.secret_key = 'super-secret-key'  # ⚠️ Replace with env var in prod
+    app.config['DEBUG'] = True  # Set to False in production
 
     # Config setup
     if test_config:

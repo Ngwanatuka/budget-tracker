@@ -1,28 +1,37 @@
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
 from app.models.user import User
 from app.models import db
+import datetime
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))  # Redirect if already logged in
+        return redirect(url_for('main.index'))
 
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
 
+        if not email or not password:
+            flash('Please fill in all fields', 'danger')
+            return redirect(url_for('auth.login'))
+
         user = User.query.filter_by(email=email).first()
 
-        if not user or not check_password_hash(user.password, password):
+        if not user:
+            flash('Invalid email or password', 'danger')
+            return redirect(url_for('auth.login'))
+
+        if not user.check_password(password):  # Use the model method
             flash('Invalid email or password', 'danger')
             return redirect(url_for('auth.login'))
 
         login_user(user)
-        
+        user.last_login = datetime.utcnow()  # Track login time
+        db.session.commit()
         
         flash(f'Welcome, {user.username}!', 'success')
         return redirect(url_for('main.index'))
@@ -64,9 +73,9 @@ def register():
         # Create new user
         new_user = User(
             email=email,
-            username=username,
-            password=generate_password_hash(password, method='pbkdf2:sha256')
+            username=username
         )
+        new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
 
