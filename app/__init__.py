@@ -4,13 +4,15 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 import os
 import click
-from flask.cli import with_appcontext
+from flask_wtf.csrf import CSRFProtect
+
 
 # Initialize extensions without binding to app
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
 login_manager.login_view = 'auth.login'
+csrf = CSRFProtect()
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -34,6 +36,7 @@ def create_app(test_config=None):
     db.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
+    csrf.init_app(app)
 
     # Import and register blueprints
     from .routes import bp as main_bp
