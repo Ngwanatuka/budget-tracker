@@ -23,15 +23,16 @@ def create_app(test_config=None):
     
     # Configuration
     app.config.update(
-        SECRET_KEY=os.getenv('SECRET_KEY', 'dev-key'),
-        DEBUG=os.getenv('DEBUG', 'False').lower() in ['true', '1'],
-        WTF_CSRF_ENABLED=True,
-        SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL') + os.path.join(
-            os.path.abspath(os.path.dirname(__file__)), 
-            'budget.db'
-        )
+    SECRET_KEY=os.getenv('SECRET_KEY', 'dev-key'),
+    DEBUG=os.getenv('DEBUG', 'False').lower() in ['true', '1'],
+    WTF_CSRF_ENABLED=True,
+    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    SQLALCHEMY_DATABASE_URI=os.getenv(
+        'DATABASE_URL',
+        'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'budget.db')
     )
+)
+
     
     if test_config:
         app.config.update(test_config)
