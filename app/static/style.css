@@ -573,9 +573,13 @@ canvas {
 }
 
 
-p.text-muted {
+.last-login {
+  position: relative;
+  bottom: 0;
   color: rgb(141 161 181 / 75%) !important;
   font-size: 0.875rem;
   margin-top: 0.5rem;
-  bottom: 0;
+  overflow: hidden;
+  white-space: wrap;
+  text-overflow: ellipsis;
 }
