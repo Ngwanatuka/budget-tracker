@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from app.models.transaction import Transaction
 from . import db
 from datetime import datetime
+import pytz
 import json
 
 bp = Blueprint('main', __name__)
@@ -15,6 +16,10 @@ def dashboard():
     income = sum(t.amount for t in transactions if t.type == 'income')
     expenses = sum(t.amount for t in transactions if t.type == 'expense')
     balance = income - expenses
+
+    # convert last login to Johannesburg timezone
+    sa_timezone = pytz.timezone('Africa/Johannesburg')
+    local_login_time = current_user.last_login.astimezone(sa_timezone)
 
     transactions_data = json.dumps([
         {
@@ -34,7 +39,8 @@ def dashboard():
                            expenses=expenses,
                            balance=balance,
                            transactions_data=transactions_data,
-                           user=current_user)
+                           user=current_user,
+                           local_login_time=local_login_time)
 
 
 @bp.route('/')
