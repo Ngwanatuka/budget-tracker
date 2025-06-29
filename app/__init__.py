@@ -5,6 +5,10 @@ from flask_migrate import Migrate
 import os
 import click
 from flask_wtf.csrf import CSRFProtect
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -19,11 +23,11 @@ def create_app(test_config=None):
     
     # Configuration
     app.config.update(
-        SECRET_KEY='super-secret-key',
-        DEBUG=True,
+        SECRET_KEY=os.getenv('SECRET_KEY', 'dev-key'),
+        DEBUG=os.getenv('DEBUG', 'False').lower() in ['true', '1'],
         WTF_CSRF_ENABLED=True,
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        SQLALCHEMY_DATABASE_URI='sqlite:///' + os.path.join(
+        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL') + os.path.join(
             os.path.abspath(os.path.dirname(__file__)), 
             'budget.db'
         )
