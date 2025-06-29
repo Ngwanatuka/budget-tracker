@@ -6,13 +6,13 @@ import os
 import click
 from flask_wtf.csrf import CSRFProtect
 
-
-# Initialize extensions without binding to app
+# Initialize extensions
 db = SQLAlchemy()
 login_manager = LoginManager()
 migrate = Migrate()
-login_manager.login_view = 'auth.login'
 csrf = CSRFProtect()
+
+login_manager.login_view = 'auth.login'
 
 def create_app(test_config=None):
     app = Flask(__name__)

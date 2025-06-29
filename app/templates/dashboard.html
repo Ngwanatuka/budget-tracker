@@ -42,7 +42,7 @@
 
                 </div>
             </div>
-             <p class="last-login">Last login: {{ current_user.last_login.strftime('%Y-%m-%d %H:%M') }}</p>
+            <p class="last-login">Last login: {{ current_user.last_login.strftime('%Y-%m-%d %H:%M') }}</p>
         </div>
 
         <!-- Main Content -->
@@ -91,6 +91,7 @@
             <!-- Add Transaction -->
             <div class="card mb-4 p-4">
                 <form method="POST" action="/add">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <div class="row g-3">
                         <div class="col-md-4">
                             <input type="text" class="form-control" name="description" placeholder="Description"
@@ -118,12 +119,12 @@
                                 <option value="Other">Other</option>
                             </select>
                         </div>
-
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-success w-100">Add</button>
                         </div>
                     </div>
                 </form>
+
             </div>
 
             <!-- Transactions -->
