@@ -571,3 +571,11 @@ canvas {
 .alert-container {
   margin-bottom: 1rem;
 }
+
+
+p.text-muted {
+  color: rgb(141 161 181 / 75%) !important;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  bottom: 0;
+}
