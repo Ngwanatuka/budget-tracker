@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -7,7 +7,7 @@ class Transaction(db.Model):
     amount = db.Column(db.Float, nullable=False)
     type = db.Column(db.String(10), nullable=False)  # income or expense
     category = db.Column(db.String(50), nullable=False)
-    date = db.Column(db.DateTime, default=datetime.utcnow)
+    date = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
     # link to user
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)

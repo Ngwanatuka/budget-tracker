@@ -55,7 +55,7 @@ class ProfileAvatarTestCase(unittest.TestCase):
             ), follow_redirects=True)
             self.assertIn(b'Profile updated successfully!', response.data)
 
-            updated_user = User.query.get(self.user_id)
+            updated_user = db.session.get(User, self.user_id)
             self.assertEqual(updated_user.username, 'newusername')
             self.assertEqual(updated_user.email, 'newemail@example.com')
 
@@ -76,7 +76,7 @@ class ProfileAvatarTestCase(unittest.TestCase):
                 ), follow_redirects=True)
             self.assertIn(b'Profile updated successfully!', response.data)
 
-            updated_user = User.query.get(self.user_id)
+            updated_user = db.session.get(User, self.user_id)
             self.assertIsNotNone(updated_user.avatar_url)
             self.assertIn('/static/avatars/1_test_avatar.png', updated_user.avatar_url)
 
@@ -97,7 +97,7 @@ class ProfileAvatarTestCase(unittest.TestCase):
                 ), follow_redirects=True)
             self.assertIn(b'Invalid file type for avatar. Allowed types are png, jpg, jpeg, gif.', response.data)
 
-            updated_user = User.query.get(self.user_id)
+            updated_user = db.session.get(User, self.user_id)
             self.assertIsNone(updated_user.avatar_url) # Avatar URL should not be updated
 
 if __name__ == '__main__':

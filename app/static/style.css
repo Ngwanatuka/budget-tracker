@@ -51,7 +51,7 @@ body {
   --income-light: #064e3b;
   --expense-light: #7f1d1d;
   --border-form-dark: border: none !important;
-  --box-shadow: 0 0 0 0.25rem rgba(102, 187, 106, 0.25) !important;
+  --box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25) !important;
 }
 
 /* Validation States */
@@ -97,7 +97,6 @@ body {
 }
 
 .mb-4 {
-  margin-top: 1.5rem;
   color: var(--text-color);
   transition: color 0.3s ease;
 }
@@ -621,6 +620,11 @@ canvas {
     margin: auto;
 }
 
+.profile-mb {
+    margin-bottom: 1.5rem;
+    color: var(--text-color, #fff);
+}
+
 .profile-avatar {
     width: 120px;
     height: 120px;
@@ -663,4 +667,23 @@ label.form-label {
 
 .alert {
     border-radius: 10px;
+}
+
+.btn-primary {
+  background-color: var(--balance-color);
+  border-color: var(--balance-color);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--balance-color); /* Keep same color for hover or slightly darker */
+  border-color: var(--balance-color);
+  opacity: 0.9; /* Slightly dim on hover */
+}
+
+.save-back {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }

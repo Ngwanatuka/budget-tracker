@@ -241,12 +241,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     getColor(type, opacity = 1) {
-      const colors = {
-        income: `rgba(16, 185, 129, ${opacity})`,
-        expense: `rgba(239, 68, 68, ${opacity})`,
-        balance: `rgba(59, 130, 246, ${opacity})`
-      };
-      return colors[type] || `rgba(99, 102, 241, ${opacity})`;
+      const rootStyles = getComputedStyle(document.documentElement);
+      let colorValue;
+
+      switch (type) {
+        case 'income':
+          colorValue = rootStyles.getPropertyValue('--income-color').trim();
+          break;
+        case 'expense':
+          colorValue = rootStyles.getPropertyValue('--expense-color').trim();
+          break;
+        case 'balance':
+          colorValue = rootStyles.getPropertyValue('--balance-color').trim();
+          break;
+        default:
+          colorValue = rootStyles.getPropertyValue('--balance-color').trim(); // Fallback
+      }
+
+      // Convert hex to rgba if necessary, or just append opacity to rgb/rgba
+      if (colorValue.startsWith('#')) {
+        const hex = colorValue.slice(1);
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+      } else if (colorValue.startsWith('rgb(')) {
+        return colorValue.replace('rgb(', 'rgba(').replace(')', `, ${opacity})`);
+      } else if (colorValue.startsWith('rgba(')) {
+        // Replace existing alpha with new opacity
+        const parts = colorValue.split(',');
+        parts[3] = ` ${opacity})`;
+        return parts.join(',');
+      }
+      return colorValue; // Return as is if not a recognized format
     }
 
     getBaseOptions() {

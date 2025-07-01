@@ -1,6 +1,6 @@
 from app import db
 from flask_login import UserMixin
-from datetime import datetime
+from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -9,7 +9,7 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-    date_joined = db.Column(db.DateTime, default=datetime.now(UTC))
+    date_joined = db.Column(db.DateTime, default=datetime.now(timezone.utc))
     last_login = db.Column(db.DateTime)
     avatar_url = db.Column(db.String(200), nullable=True)
 

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from app.models.user import User
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -30,7 +30,7 @@ def login():
             return redirect(url_for('auth.login'))
 
         login_user(user)
-        user.last_login = datetime.utcnow()  # Track login time
+        user.last_login = datetime.now(timezone.utc)  # Track login time
         db.session.commit()
         
         flash(f'Welcome, {user.username}!', 'success')

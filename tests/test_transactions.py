@@ -115,9 +115,9 @@ class TransactionTestCase(unittest.TestCase):
 
     def test_transaction_pagination(self):
         # Add 20 transactions with distinct dates to ensure consistent ordering
-        from datetime import datetime, timedelta
+        from datetime import datetime, timedelta, timezone
         for i in range(20, 0, -1):  # Add from 20 down to 1 to ensure descending order by date
-            transaction = Transaction(description=f'Test Transaction {i}', amount=i * 10, type='income', category='Category', user_id=self.user.id, date=datetime.utcnow() - timedelta(seconds=i))
+            transaction = Transaction(description=f'Test Transaction {i}', amount=i * 10, type='income', category='Category', user_id=self.user.id, date=datetime.now(timezone.utc) - timedelta(seconds=i))
             db.session.add(transaction)
         db.session.commit()
 
@@ -154,7 +154,7 @@ class TransactionTestCase(unittest.TestCase):
         # Test an invalid page number
         response = self.client.get('/dashboard?page=999', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'No transactions found.', response.data)
+        self.assertIn(b'No transactions yet', response.data)
 
 
 if __name__ == '__main__':
