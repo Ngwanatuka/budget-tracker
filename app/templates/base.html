@@ -4,13 +4,35 @@
     <meta charset="UTF-8">
     <title>{% block title %}Budget Tracker{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        // Immediately apply theme from localStorage to prevent FOUC
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
 </head>
 <body>
     <header>
         <h1>💰 Simple Budget Tracker</h1>
+        <nav>
+            {% if current_user.is_authenticated %}
+                {% if request.endpoint != 'main.profile' %}
+                <a href="{{ url_for('main.profile') }}">Profile</a>
+                {% endif %}
+                {% if request.endpoint != 'main.dashboard' %}
+                <a href="{{ url_for('main.dashboard') }}">Dashboard</a>
+                {% endif %}
+            {% endif %}
+        </nav>
     </header>
     <main>
         {% block content %}{% endblock %}
     </main>
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>

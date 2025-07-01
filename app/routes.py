@@ -1,8 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app
+from werkzeug.utils import secure_filename
+import os
 from flask_login import login_required, current_user
 from app.models.transaction import Transaction
 from . import db
-from datetime import datetime
+from datetime import datetime, UTC
 import pytz
 import json
 from sqlalchemy.exc import SQLAlchemyError
@@ -24,6 +26,10 @@ def dashboard():
     # convert last login to Johannesburg timezone
     sa_timezone = pytz.timezone('Africa/Johannesburg')
     local_login_time = current_user.last_login.astimezone(sa_timezone)
+
+    # Update last login time
+    current_user.last_login = datetime.now(UTC)
+    db.session.commit()
 
     transactions_data = json.dumps([
         {
@@ -97,7 +103,7 @@ def add_transaction():
             amount=amount,
             type=t_type,
             category=category,
-            date=datetime.utcnow(),
+            date=datetime.now(UTC),
             user=current_user
         )
 
@@ -165,3 +171,36 @@ def delete_transaction(transaction_id):
     db.session.commit()
     flash('Transaction deleted successfully!', 'success')
     return redirect(url_for('main.dashboard'))
+
+
+@bp.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        current_user.username = request.form['username']
+        current_user.email = request.form['email']
+
+        # Handle avatar upload
+        if 'avatar' in request.files:
+            avatar = request.files['avatar']
+            if avatar.filename != '':
+                if avatar and allowed_file(avatar.filename):
+                    filename = secure_filename(avatar.filename)
+                    # Create a unique filename to prevent overwrites
+                    unique_filename = str(current_user.id) + '_' + filename
+                    avatar_path = os.path.join(current_app.config['UPLOAD_FOLDER'], unique_filename)
+                    avatar.save(avatar_path)
+                    current_user.avatar_url = url_for('static', filename='avatars/' + unique_filename)
+                else:
+                    flash('Invalid file type for avatar. Allowed types are png, jpg, jpeg, gif.', 'error')
+                    return redirect(url_for('main.profile'))
+
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('main.profile'))
+
+    return render_template('profile.html', user=current_user)
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']

@@ -30,11 +30,14 @@ def create_app(test_config=None):
     SQLALCHEMY_DATABASE_URI=os.getenv(
         'DATABASE_URL',
         'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'budget.db')
-    )
+    ),
+    UPLOAD_FOLDER=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/avatars'),
+    ALLOWED_EXTENSIONS={'png', 'jpg', 'jpeg', 'gif'}
 )
 
+    # Ensure upload folder exists
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
-    
     if test_config:
         app.config.update(test_config)
 
