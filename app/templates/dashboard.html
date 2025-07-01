@@ -67,27 +67,7 @@
 
             <h1 class="mb-4">Welcome back, {{ current_user.username}} 👋</h1>
 
-            <!-- Summary Cards -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card p-3 income-card">
-                        <h5>Total Income</h5>
-                        <h3>R {{ income }}</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card p-3 expense-card">
-                        <h5>Total Expenses</h5>
-                        <h3>R {{ expenses }}</h3>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card p-3 balance-card">
-                        <h5>Net Balance</h5>
-                        <h3>R {{ balance }}</h3>
-                    </div>
-                </div>
-            </div>
+            {% include 'components/summary_cards.html' %}
 
             <!-- Add Transaction -->
             <div class="card mb-4 p-4">

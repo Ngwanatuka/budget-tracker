@@ -30,40 +30,7 @@ confirmReset.addEventListener('click', () => {
 
 }
 
-function resetAllData() {
-  try {
-    // 1. Clear transactions list
-    const transactionsContainer = document.querySelector('.card.p-3');
-    if (transactionsContainer) {
-      // Remove all transaction items
-      document.querySelectorAll('.transaction-item').forEach(el => el.remove());
-      
-      // Add empty state message if it doesn't exist
-      if (!transactionsContainer.querySelector('.text-muted')) {
-        const emptyMsg = document.createElement('p');
-        emptyMsg.className = 'text-muted p-3';
-        emptyMsg.textContent = 'No transactions yet';
-        transactionsContainer.appendChild(emptyMsg);
-      }
-    }
 
-    // 2. Reset summary cards
-    document.querySelectorAll('.income-card h3, .expense-card h3, .balance-card h3')
-      .forEach(el => el.textContent = 'R 0');
-
-    // 3. Reset charts
-    if (window.budgetCharts) {
-      // Clear chart data
-      window.budgetCharts.transactions = [];
-      window.budgetCharts.renderCharts();
-    }
-
-    console.log("Data reset complete");
-  } catch (error) {
-    console.error("Error during reset:", error);
-    showAlert('Error resetting data', 'danger');
-  }
-}
 
 function showAlert(message, type) {
   const alertDiv = document.createElement('div');

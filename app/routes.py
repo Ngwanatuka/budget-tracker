@@ -5,6 +5,7 @@ from . import db
 from datetime import datetime
 import pytz
 import json
+from sqlalchemy.exc import SQLAlchemyError
 
 bp = Blueprint('main', __name__)
 
@@ -44,13 +45,11 @@ def dashboard():
 
 
 @bp.route('/')
-def landing():
+def index():
     # If user is already logged in, redirect to dashboard
     if current_user.is_authenticated:
         return redirect(url_for('main.dashboard'))
     return render_template('landing.html', datetime=datetime)
-
-bp.add_url_rule('/', endpoint='index', view_func=landing)
 
 
 @bp.route('/reset', methods=['POST'])
@@ -59,7 +58,7 @@ def reset_data():
         Transaction.query.delete()
         db.session.commit()
         flash('All data has been reset.', 'success')
-    except Exception as e:
+    except SQLAlchemyError as e:
         db.session.rollback()
         flash('Error resetting data.', 'error')
 

@@ -74,5 +74,44 @@ class TransactionTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b'Test Expense', response.data)
 
+    def test_edit_other_users_transaction(self):
+        # Create another user
+        other_user = User(username='otheruser', email='other@example.com')
+        other_user.set_password('password')
+        db.session.add(other_user)
+        db.session.commit()
+
+        # Add a transaction for the other user
+        transaction = Transaction(description='Other User Transaction', amount=100, type='income', category='Salary', user_id=other_user.id)
+        db.session.add(transaction)
+        db.session.commit()
+
+        # Try to edit the other user's transaction
+        response = self.client.post(f'/edit/{transaction.id}', data={
+            'description': 'Updated Transaction',
+            'amount': 150,
+            'type': 'income',
+            'category': 'Bonus'
+        }, follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'You do not have permission to edit this transaction.', response.data)
+
+    def test_delete_other_users_transaction(self):
+        # Create another user
+        other_user = User(username='otheruser', email='other@example.com')
+        other_user.set_password('password')
+        db.session.add(other_user)
+        db.session.commit()
+
+        # Add a transaction for the other user
+        transaction = Transaction(description='Other User Transaction', amount=100, type='income', category='Salary', user_id=other_user.id)
+        db.session.add(transaction)
+        db.session.commit()
+
+        # Try to delete the other user's transaction
+        response = self.client.post(f'/delete/{transaction.id}', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'You do not have permission to delete this transaction.', response.data)
+
 if __name__ == '__main__':
     unittest.main()

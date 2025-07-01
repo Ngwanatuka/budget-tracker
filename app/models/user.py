@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
 
     def set_password(self, password):
         """Create hashed password."""
-        self.password = generate_password_hash(password, method='pbkdf2:sha256')
+        self.password = generate_password_hash(password, method='pbkdf2:sha256', salt_length=16)
     
     def check_password(self, password):
         """Check hashed password."""

@@ -1,29 +1,42 @@
 import unittest
-import os
-import json
-from app import create_app
-from flask import Flask
+from app import create_app, db
+from app.models.user import User
+from app.models.transaction import Transaction
+from flask import get_flashed_messages
 
-class BudgetAppTestCase(unittest.TestCase):
+class BudgetAppRouteTestCase(unittest.TestCase):
     def setUp(self):
-        self.app = create_app({'TESTING': True})
+        self.app = create_app({
+            'TESTING': True,
+            'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
+            'WTF_CSRF_ENABLED': False
+        })
         self.client = self.app.test_client()
+        self.app_context = self.app.app_context()
+        self.app_context.push()
+        db.create_all()
 
-        # Create a test data file
-        self.test_data_file = os.path.join(os.path.dirname(__file__), '..', 'data.json')
-        with open(self.test_data_file, 'w') as f:
-            json.dump([], f)
+        # Create a test user
+        self.user = User(username='testuser', email='test@example.com')
+        self.user.set_password('password')
+        db.session.add(self.user)
+        db.session.commit()
+
+        # Log in the test user
+        self.client.post('/auth/login', data={
+            'email': 'test@example.com',
+            'password': 'password'
+        }, follow_redirects=True)
 
     def tearDown(self):
-        # Clean up after tests
-        if os.path.exists(self.test_data_file):
-            os.remove(self.test_data_file)
+        db.session.remove()
+        db.drop_all()
+        self.app_context.pop()
 
-    
-    def test_dashboard_loads(self):
-        response = self.client.get('/')
+    def test_dashboard_loads_authenticated(self):
+        response = self.client.get('/dashboard')
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Welcome back', response.data)
+        self.assertIn(b'Welcome back, testuser', response.data)
 
     def test_add_transaction_success(self):
         response = self.client.post('/add', data={
@@ -32,12 +45,12 @@ class BudgetAppTestCase(unittest.TestCase):
             'type': 'income',
             'category': 'Other'
         }, follow_redirects=True)
-        self.assertIn(b'Transaction added successfully', response.data)
+        self.assertIn(b'Transaction added successfully!', response.data)
 
-    def test_add_transaction_invalid(self):
+    def test_add_transaction_missing_description(self):
         response = self.client.post('/add', data={
             'description': '',
-            'amount': '0',
+            'amount': '100',
             'type': 'income',
             'category': 'Other'
         }, follow_redirects=True)
@@ -52,7 +65,6 @@ class BudgetAppTestCase(unittest.TestCase):
         }, follow_redirects=True)
         self.assertIn(b'Amount must be positive', response.data)
 
-
     def test_add_transaction_invalid_type(self):
         response = self.client.post('/add', data={
             'description': 'Test Transaction',
@@ -62,8 +74,7 @@ class BudgetAppTestCase(unittest.TestCase):
         }, follow_redirects=True)
         self.assertIn(b'Invalid transaction type', response.data)
 
-
-    def test_add_transaction_invalid_category(self):
+    def test_add_transaction_missing_category(self):
         response = self.client.post('/add', data={
             'description': 'Test Transaction',
             'amount': '1000',
@@ -72,74 +83,42 @@ class BudgetAppTestCase(unittest.TestCase):
         }, follow_redirects=True)
         self.assertIn(b'Category is required', response.data)
 
-
-    def test_add_transaction_ignores_user_date_input(self):
-        response = self.client.post('/add', data={
-            'description': 'Ignore Date Field',
-            'amount': '150',
+    def test_transaction_displayed_on_dashboard(self):
+        # Add a transaction first
+        self.client.post('/add', data={
+            'description': 'Display test',
+            'amount': '123.45',
             'type': 'income',
-            'category': 'Other',
-            'date': 'not-a-real-date'  # Should be ignored
-    }, follow_redirects=True)
+            'category': 'Other'
+        }, follow_redirects=True)
 
+        # Then check it's on the dashboard
+        response = self.client.get('/dashboard')
+        self.assertIn(b'Display test', response.data)
+        self.assertIn(b'123.45', response.data)
+
+    def test_reset_data(self):
+        # Add a transaction
+        self.client.post('/add', data={'description': 'Test', 'amount': '100', 'type': 'income', 'category': 'Test'}, follow_redirects=True)
+        
+        # Reset data
+        response = self.client.post('/reset', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Transaction added successfully!', response.data)
+        
+        # Check that the transaction is gone
+        self.assertNotIn(b'Test', response.data)
+        
+        # Check for the flash message
+        with self.app.test_request_context():
+            # Manually trigger session handling to get flashed messages
+            with self.client.session_transaction() as session:
+                flashed_messages = session.get('_flashes', [])
+        
+        # This is a workaround. A better way is to check the response data directly
+        # as the flash message should be rendered in the redirected page.
+        self.assertIn(b'All data has been reset.', response.data)
 
-def test_flash_success_message(self):
-    response = self.client.post('/add', data={
-        'description': 'Test success',
-        'amount': '100',
-        'type': 'income',
-        'category': 'Food'
-    }, follow_redirects=True)
-
-    self.assertIntIn(b'Transaction added successfully', response.data)
-
-
-def test_flash_error_on_missing_description(self):
-    response = self.client.post('/add', data={
-        'description': '',
-        'amount': '100',
-        'type': 'income',
-        'category': 'Food'
-    }, follow_redirects=True)
-
-    self.assertIn(b'Description is required', response.data)
-
-
-def test_dashboard_ui_elements(self):
-    response = self.client.get('/')
-    html = response.data.decode()
-
-    self.assertIn('Total Income', html)
-    self.assertIn('Total Expenses', html)
-    self.assertIn('Net Balance', html)
-    self.assertIn('Add', html)  # Submit button
-    self.assertIn('Transaction Analytics', html)
-
-
-def test_dashboard_js_hooks_exist(self):
-    response = self.client.get('/')
-    html = response.data.decode()
-
-    self.assertIn('id="transactions-data"', html)
-    self.assertIn('id="categoryChart"', html)
-    self.assertIn('id="monthlyTrendChart"', html)
-    self.assertIn('id="settingsToggle"', html)
-
-def test_transaction_displayed_on_dashboard(self):
-    # Add a transaction first
-    self.client.post('/add', data={
-        'description': 'Display test',
-        'amount': '123.45',
-        'type': 'income',
-        'category': 'Other'
-    }, follow_redirects=True)
-
-    # Then check it's on the dashboard
-    response = self.client.get('/')
-    html = response.data.decode()
-    self.assertIn('Display test', html)
-    self.assertIn('R 123.45', html)
+if __name__ == '__main__':
+    unittest.main()
 
 

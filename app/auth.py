@@ -9,7 +9,7 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.dashboard'))
 
     if request.method == 'POST':
         email = request.form.get('email')
@@ -34,7 +34,7 @@ def login():
         db.session.commit()
         
         flash(f'Welcome, {user.username}!', 'success')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.dashboard'))
 
     return render_template('auth/login.html')
 
@@ -43,12 +43,12 @@ def login():
 def logout():
     logout_user()
     flash('You have been logged out.', 'info')
-    return redirect(url_for('main.landing'))
+    return redirect(url_for('main.index'))
 
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('main.landing'))  # Redirect if already logged in
+        return redirect(url_for('main.index'))  # Redirect if already logged in
 
     if request.method == 'POST':
         email = request.form.get('email')
