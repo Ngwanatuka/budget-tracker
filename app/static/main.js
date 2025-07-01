@@ -306,4 +306,45 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   setupResetButton();
+
+  // ==================== Edit and Delete Modals ====================
+  const editModalElement = document.getElementById('editModal');
+  const deleteModalElement = document.getElementById('deleteModal');
+
+  if (editModalElement && deleteModalElement) {
+    const editModal = new bootstrap.Modal(editModalElement);
+    const deleteModal = new bootstrap.Modal(deleteModalElement);
+
+    document.querySelectorAll('.edit-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const transactionId = this.dataset.id;
+        const description = this.dataset.description;
+        const amount = this.dataset.amount;
+        const type = this.dataset.type;
+        const category = this.dataset.category;
+
+        document.getElementById('edit-description').value = description;
+        document.getElementById('edit-amount').value = amount;
+        document.getElementById('edit-type').value = type;
+        document.getElementById('edit-category').value = category;
+
+        const editForm = document.getElementById('editForm');
+        editForm.action = `/edit/${transactionId}`;
+
+        editModal.show();
+      });
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const transactionId = this.dataset.id;
+        const deleteForm = document.getElementById('deleteForm');
+        deleteForm.action = `/delete/${transactionId}`;
+
+        deleteModal.show();
+      });
+    });
+  } else {
+    console.error("Edit or Delete modal elements not found!");
+  }
 });

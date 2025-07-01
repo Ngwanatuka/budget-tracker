@@ -106,3 +106,59 @@ def add_transaction():
         flash('Invalid amount format', 'error')
 
     return redirect(url_for('main.dashboard'))
+
+
+@bp.route('/edit/<int:transaction_id>', methods=['POST'])
+@login_required
+def edit_transaction(transaction_id):
+    transaction = Transaction.query.get_or_404(transaction_id)
+    if transaction.user_id != current_user.id:
+        flash('You do not have permission to edit this transaction.', 'danger')
+        return redirect(url_for('main.dashboard'))
+
+    try:
+        description = request.form['description'].strip()
+        if not description:
+            flash('Description is required', 'error')
+            return redirect(url_for('main.dashboard'))
+
+        amount = float(request.form['amount'])
+        if amount <= 0:
+            flash('Amount must be positive', 'error')
+            return redirect(url_for('main.dashboard'))
+
+        t_type = request.form['type'].strip().lower()
+        if t_type not in ['income', 'expense']:
+            flash('Invalid transaction type', 'error')
+            return redirect(url_for('main.dashboard'))
+
+        category = request.form['category'].strip()
+        if not category:
+            flash('Category is required', 'error')
+            return redirect(url_for('main.dashboard'))
+
+        transaction.description = description
+        transaction.amount = amount
+        transaction.type = t_type
+        transaction.category = category
+        db.session.commit()
+        flash('Transaction updated successfully!', 'success')
+
+    except ValueError:
+        flash('Invalid amount format', 'error')
+
+    return redirect(url_for('main.dashboard'))
+
+
+@bp.route('/delete/<int:transaction_id>', methods=['POST'])
+@login_required
+def delete_transaction(transaction_id):
+    transaction = Transaction.query.get_or_404(transaction_id)
+    if transaction.user_id != current_user.id:
+        flash('You do not have permission to delete this transaction.', 'danger')
+        return redirect(url_for('main.dashboard'))
+
+    db.session.delete(transaction)
+    db.session.commit()
+    flash('Transaction deleted successfully!', 'success')
+    return redirect(url_for('main.dashboard'))
