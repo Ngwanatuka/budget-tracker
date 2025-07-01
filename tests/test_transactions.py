@@ -113,5 +113,49 @@ class TransactionTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'You do not have permission to delete this transaction.', response.data)
 
+    def test_transaction_pagination(self):
+        # Add 20 transactions with distinct dates to ensure consistent ordering
+        from datetime import datetime, timedelta
+        for i in range(20, 0, -1):  # Add from 20 down to 1 to ensure descending order by date
+            transaction = Transaction(description=f'Test Transaction {i}', amount=i * 10, type='income', category='Category', user_id=self.user.id, date=datetime.utcnow() - timedelta(seconds=i))
+            db.session.add(transaction)
+        db.session.commit()
+
+        # Test first page (per_page is 5)
+        response = self.client.get('/dashboard', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Test Transaction 1', response.data)
+        self.assertIn(b'Test Transaction 5', response.data)
+        self.assertNotIn(b'Test Transaction 6', response.data)
+
+        # Test second page
+        response = self.client.get('/dashboard?page=2', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Test Transaction 6', response.data)
+        self.assertIn(b'Test Transaction 10', response.data)
+        self.assertNotIn(b'Test Transaction 5', response.data)
+        self.assertNotIn(b'Test Transaction 11', response.data)
+
+        # Test third page
+        response = self.client.get('/dashboard?page=3', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Test Transaction 11', response.data)
+        self.assertIn(b'Test Transaction 15', response.data)
+        self.assertNotIn(b'Test Transaction 10', response.data)
+        self.assertNotIn(b'Test Transaction 16', response.data)
+
+        # Test fourth page
+        response = self.client.get('/dashboard?page=4', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'Test Transaction 16', response.data)
+        self.assertIn(b'Test Transaction 20', response.data)
+        self.assertNotIn(b'Test Transaction 15', response.data)
+
+        # Test an invalid page number
+        response = self.client.get('/dashboard?page=999', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(b'No transactions found.', response.data)
+
+
 if __name__ == '__main__':
     unittest.main()
