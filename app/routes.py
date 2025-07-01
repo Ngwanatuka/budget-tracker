@@ -12,7 +12,10 @@ bp = Blueprint('main', __name__)
 @bp.route('/dashboard')
 @login_required
 def dashboard():
-    transactions = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.date.desc()).all()
+    page = request.args.get('page', 1, type=int)
+    per_page = 5  # Number of transactions per page
+    transactions_pagination = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.date.desc()).paginate(page=page, per_page=per_page, error_out=False)
+    transactions = transactions_pagination.items
     
     income = sum(t.amount for t in transactions if t.type == 'income')
     expenses = sum(t.amount for t in transactions if t.type == 'expense')
@@ -41,7 +44,8 @@ def dashboard():
                            balance=balance,
                            transactions_data=transactions_data,
                            user=current_user,
-                           local_login_time=local_login_time)
+                           local_login_time=local_login_time,
+                           transactions_pagination=transactions_pagination)
 
 
 @bp.route('/')
