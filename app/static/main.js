@@ -121,6 +121,30 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
 
+    prepareIncomeCategoryData() {
+      const incomes = this.transactions.filter(t => t.type === 'income');
+      const categories = [...new Set(incomes.map(t => t.category))];
+      
+      const categoryData = categories.map(category => 
+        incomes
+          .filter(t => t.category === category)
+          .reduce((sum, t) => sum + Math.abs(t.amount), 0)
+      );
+
+      return {
+        labels: categories,
+        datasets: [{
+          label: 'Income by Category',
+          data: categoryData,
+          backgroundColor: categories.map((_, i) => 
+            this.getColor('income', 0.7 - (i * 0.05))
+          ),
+          borderColor: categories.map(() => this.getColor('income')),
+          borderWidth: 1
+        }]
+      };
+    }
+
     prepareTrendData() {
       const now = new Date();
       const sixMonthsAgo = new Date(now);
@@ -178,6 +202,37 @@ document.addEventListener('DOMContentLoaded', () => {
             data: monthlyData.map(m => m.expense),
             borderColor: this.getColor('expense'),
             backgroundColor: this.getColor('expense', 0.1),
+            tension: 0.3,
+            fill: true
+          }
+        ]
+      };
+    }
+
+    prepareBalanceTrendData() {
+      const sortedTransactions = [...this.transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
+      let balance = 0;
+      const balanceData = [];
+      const dates = [];
+
+      sortedTransactions.forEach(t => {
+        if (t.type === 'income') {
+          balance += t.amount;
+        } else {
+          balance -= t.amount;
+        }
+        balanceData.push(balance);
+        dates.push(new Date(t.date).toLocaleDateString());
+      });
+
+      return {
+        labels: dates,
+        datasets: [
+          {
+            label: 'Balance',
+            data: balanceData,
+            borderColor: this.getColor('balance'),
+            backgroundColor: this.getColor('balance', 0.1),
             tension: 0.3,
             fill: true
           }
@@ -246,6 +301,19 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn("Category chart canvas not found");
       }
 
+      // Render Income Category Chart (Doughnut)
+      const incomeCategoryCtx = document.getElementById('incomeCategoryChart')?.getContext('2d');
+      if (incomeCategoryCtx) {
+        if (this.incomeCategoryChart) this.incomeCategoryChart.destroy();
+        this.incomeCategoryChart = new Chart(incomeCategoryCtx, {
+          type: 'doughnut',
+          data: this.prepareIncomeCategoryData(),
+          options: this.getBaseOptions()
+        });
+      } else {
+        console.warn("Income category chart canvas not found");
+      }
+
       // Render Trend Chart (Line)
       const trendCtx = document.getElementById('monthlyTrendChart')?.getContext('2d');
       if (trendCtx) {
@@ -257,6 +325,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       } else {
         console.warn("Trend chart canvas not found");
+      }
+
+      // Render Balance Trend Chart (Line)
+      const balanceTrendCtx = document.getElementById('balanceTrendChart')?.getContext('2d');
+      if (balanceTrendCtx) {
+        if (this.balanceTrendChart) this.balanceTrendChart.destroy();
+        this.balanceTrendChart = new Chart(balanceTrendCtx, {
+          type: 'line',
+          data: this.prepareBalanceTrendData(),
+          options: this.getBaseOptions()
+        });
+      } else {
+        console.warn("Balance trend chart canvas not found");
       }
     }
   }
