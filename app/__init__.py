@@ -29,7 +29,7 @@ def create_app(test_config=None):
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SQLALCHEMY_DATABASE_URI=os.getenv(
         'DATABASE_URL',
-        'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'budget.db')
+        '//postgres' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'budget.db')
     ),
     UPLOAD_FOLDER=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/avatars'),
     ALLOWED_EXTENSIONS={'png', 'jpg', 'jpeg', 'gif'}
