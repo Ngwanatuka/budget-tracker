@@ -41,7 +41,7 @@ def dashboard():
             'category': t.category,
             'date': t.date.isoformat()
         }
-        for t in transactions
+        for t in all_transactions
     ])
 
     return render_template('dashboard.html',
