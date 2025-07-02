@@ -23,7 +23,9 @@ body {
   --border-color: #eee;
   --input-bg: #ffffff;
   --income-color: #10b981;
+  --income-color-rgb: 16, 185, 129;
   --expense-color: #ef4444;
+  --expense-color-rgb: 239, 68, 68;
   --balance-color: #3b82f6;
   --transaction-bg: #e9ecef;
   --income-light: #d1fae5;
@@ -686,4 +688,66 @@ label.form-label {
   justify-content: center;
   gap: 1rem;
   margin-top: 1.5rem;
+}
+
+/* Styles moved from landing.html */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease-out forwards;
+}
+
+.fade-in:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.fade-in:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.fade-in:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+footer {
+    margin-top: 4rem;
+    padding: 1rem 0;
+    color: var(--text-color);
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--border-color);
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+}
+
+canvas {
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* Default size: normal buttons */
+.navbar .btn {
+    font-size: 1rem;
+    /* normal size */
+    padding: 0.5rem 1rem;
+}
+
+/* Smaller buttons on small screens (phones) */
+@media (max-width: 575.98px) {
+    .navbar .btn {
+        font-size: 0.8rem;
+        /* slightly smaller font */
+        padding: 0.25rem 0.6rem;
+        /* less padding */
+    }
 }

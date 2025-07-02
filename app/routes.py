@@ -4,7 +4,7 @@ import os
 from flask_login import login_required, current_user
 from app.models.transaction import Transaction
 from . import db
-from datetime import datetime, UTC
+from datetime import datetime, UTC, timezone
 import pytz
 import json
 from sqlalchemy.exc import SQLAlchemyError
@@ -59,7 +59,7 @@ def index():
     # If user is already logged in, redirect to dashboard
     if current_user.is_authenticated:
         return redirect(url_for('main.dashboard'))
-    return render_template('landing.html', datetime=datetime)
+    return render_template('landing.html', datetime=datetime, timezone=timezone)
 
 
 @bp.route('/reset', methods=['POST'])

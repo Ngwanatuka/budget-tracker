@@ -11,7 +11,7 @@
 
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}
-                        <div class="alert-container mb-3">
+                        <div class="alert-container mb-4">
                             {% for category, message in messages %}
                                 <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
                                     {{ message }}
@@ -25,11 +25,10 @@
                 <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                    <!-- Avatar -->
-                    <div class="text-center mb-3">
+                    <div class="text-center mb-4">
                         <img src="{{ user.avatar_url or url_for('static', filename='images/default_avatar.png') }}"
                              alt="User Avatar"
-                             class="profile-avatar shadow-sm mb-3">
+                             class="profile-avatar shadow-sm">
                         <div>
                             <label for="avatar" class="form-label">Update Avatar</label>
                             <input type="file" class="form-control form-control-sm mx-auto" style="max-width: 250px;" name="avatar" accept="image/*">
@@ -43,7 +42,7 @@
                     </div>
 
                     <!-- Email -->
-                    <div class="profile-mb">
+                    <div class="mb-4">
                         <label for="email" class="form-label">Email address</label>
                         <input type="email" class="form-control" name="email" value="{{ user.email }}" required>
                     </div>

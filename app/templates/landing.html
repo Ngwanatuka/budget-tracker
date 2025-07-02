@@ -133,11 +133,17 @@
 
     <!-- Footer -->
     <footer class="text-center">
-        <div>© {{ datetime.utcnow().year }} Budget Tracker | Built by Moses</div>
+        <div>© {{ datetime.now(timezone.utc).year }} Budget Tracker | Built by Moses</div>
     </footer>
 
     <script>
         const ctx = document.getElementById('previewChart').getContext('2d');
+
+        // Function to get CSS variable value
+        function getCssVar(name) {
+            return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+
         new Chart(ctx, {
             type: 'line',
             data: {
@@ -146,16 +152,16 @@
                     {
                         label: 'Income',
                         data: [1200, 1500, 1300, 1400, 1600, 1700],
-                        borderColor: 'rgba(16, 185, 129, 1)',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderColor: getCssVar('--income-color'),
+                        backgroundColor: `rgba(${getCssVar('--income-color-rgb')}, 0.1)`,
                         fill: true,
                         tension: 0.3
                     },
                     {
                         label: 'Expenses',
                         data: [800, 900, 950, 1000, 1100, 1050],
-                        borderColor: 'rgba(239, 68, 68, 1)',
-                        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                        borderColor: getCssVar('--expense-color'),
+                        backgroundColor: `rgba(${getCssVar('--expense-color-rgb')}, 0.1)`,
                         fill: true,
                         tension: 0.3
                     }
@@ -166,17 +172,17 @@
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        labels: { color: 'var(--text-color)' }
+                        labels: { color: getCssVar('--text-color') }
                     }
                 },
                 scales: {
                     x: {
-                        ticks: { color: 'var(--text-color)' },
+                        ticks: { color: getCssVar('--text-color') },
                         grid: { display: false }
                     },
                     y: {
                         ticks: {
-                            color: 'var(--text-color)',
+                            color: getCssVar('--text-color'),
                             callback: value => `R${value}`
                         },
                         grid: { color: 'rgba(0,0,0,0.1)' }
