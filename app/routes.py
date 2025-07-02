@@ -18,10 +18,11 @@ def dashboard():
     per_page = 5  # Number of transactions per page
     transactions_pagination = Transaction.query.filter_by(user_id=current_user.id).order_by(Transaction.date.desc()).paginate(page=page, per_page=per_page, error_out=False)
     transactions = transactions_pagination.items
-    
-    income = sum(t.amount for t in transactions if t.type == 'income')
-    expenses = sum(t.amount for t in transactions if t.type == 'expense')
-    balance = income - expenses
+
+    all_transactions = Transaction.query.filter_by(user_id=current_user.id).all()
+    total_income = sum(t.amount for t in all_transactions if t.type == 'income')
+    total_expenses = sum(t.amount for t in all_transactions if t.type == 'expense')
+    total_balance = total_income - total_expenses
 
     # convert last login to Johannesburg timezone
     sa_timezone = pytz.timezone('Africa/Johannesburg')
@@ -45,9 +46,9 @@ def dashboard():
 
     return render_template('dashboard.html',
                            transactions=transactions,
-                           income=income,
-                           expenses=expenses,
-                           balance=balance,
+                           total_income=total_income,
+                           total_expenses=total_expenses,
+                           total_balance=total_balance,
                            transactions_data=transactions_data,
                            user=current_user,
                            local_login_time=local_login_time,
