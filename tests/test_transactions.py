@@ -1,6 +1,7 @@
 import unittest
 import sys
 import os
+from datetime import datetime, timedelta, timezone
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from app import create_app, db
 from app.models.user import User
@@ -115,7 +116,6 @@ class TransactionTestCase(unittest.TestCase):
 
     def test_transaction_pagination(self):
         # Add 20 transactions with distinct dates to ensure consistent ordering
-        from datetime import datetime, timedelta, timezone
         for i in range(20, 0, -1):  # Add from 20 down to 1 to ensure descending order by date
             transaction = Transaction(description=f'Test Transaction {i}', amount=i * 10, type='income', category='Category', user_id=self.user.id, date=datetime.now(timezone.utc) - timedelta(seconds=i))
             db.session.add(transaction)
@@ -155,6 +155,60 @@ class TransactionTestCase(unittest.TestCase):
         response = self.client.get('/dashboard?page=999', follow_redirects=True)
         self.assertEqual(response.status_code, 200)
         self.assertIn(b'No transactions yet', response.data)
+
+    def test_total_income_expense_net_income_with_pagination(self):
+        # Add a mix of income and expense transactions
+        transactions_to_add = [
+            {'description': 'Salary', 'amount': 1000, 'type': 'income'},
+            {'description': 'Rent', 'amount': 500, 'type': 'expense'},
+            {'description': 'Bonus', 'amount': 200, 'type': 'income'},
+            {'description': 'Groceries', 'amount': 150, 'type': 'expense'},
+            {'description': 'Freelance', 'amount': 300, 'type': 'income'},
+            {'description': 'Utilities', 'amount': 100, 'type': 'expense'},
+            {'description': 'Gift', 'amount': 50, 'type': 'income'},
+            {'description': 'Dinner', 'amount': 75, 'type': 'expense'},
+            {'description': 'Investment', 'amount': 1000, 'type': 'income'},
+            {'description': 'Shopping', 'amount': 250, 'type': 'expense'},
+            {'description': 'Refund', 'amount': 80, 'type': 'income'},
+            {'description': 'Transport', 'amount': 40, 'type': 'expense'},
+        ]
+
+        expected_total_income = 0
+        expected_total_expenses = 0
+        for i, data in enumerate(transactions_to_add):
+            transaction = Transaction(
+                description=data['description'],
+                amount=data['amount'],
+                type=data['type'],
+                category='Test Category',
+                user_id=self.user.id,
+                date=datetime.now(timezone.utc) - timedelta(seconds=i) # Ensure distinct dates
+            )
+            db.session.add(transaction)
+            if data['type'] == 'income':
+                expected_total_income += data['amount']
+            else:
+                expected_total_expenses += data['amount']
+        db.session.commit()
+
+        expected_net_income = expected_total_income - expected_total_expenses
+
+        # Access the dashboard (first page)
+        response = self.client.get('/dashboard', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+        # Verify the displayed totals match the expected totals
+        self.assertIn(f'R {expected_total_income:.1f}'.encode(), response.data)
+        self.assertIn(f'R {expected_total_expenses:.1f}'.encode(), response.data)
+        self.assertIn(f'R {expected_net_income:.1f}'.encode(), response.data)
+
+        # Access a different page (e.g., second page) and verify totals are still correct
+        response = self.client.get('/dashboard?page=2', follow_redirects=True)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertIn(f'R {expected_total_income:.1f}'.encode(), response.data)
+        self.assertIn(f'R {expected_total_expenses:.1f}'.encode(), response.data)
+        self.assertIn(f'R {expected_net_income:.1f}'.encode(), response.data)
 
 
 if __name__ == '__main__':
