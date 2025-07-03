@@ -42,8 +42,11 @@
                     <button id="resetDataBtn" class="dropdown-item ps-3 py-2 text-danger">
                         <i class="bi bi-trash"></i> Reset All Data
                     </button>
-
+                    {% if local_login_time %}
                     <a href="{{ url_for('auth.logout') }}" class="dropdown-item ps-3 py-2 text-danger">Logout</a>
+                    {% else %}
+                    <p>Last login: N/A</p>
+                    {% endif %}
 
                 </div>
             </div>
