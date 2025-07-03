@@ -28,7 +28,7 @@ def create_app(test_config=None):
     WTF_CSRF_ENABLED=True,
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SQLALCHEMY_DATABASE_URI=os.getenv(
-        'DATABASE_URL',
+        'DATABASE_PUBLIC_URL',
         'sqlite:///' + os.path.join(os.path.abspath(os.path.dirname(__file__)), 'budget.db')
     ),
     UPLOAD_FOLDER=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'static/avatars'),
