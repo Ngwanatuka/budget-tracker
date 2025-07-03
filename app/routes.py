@@ -4,7 +4,7 @@ import os
 from flask_login import login_required, current_user
 from app.models.transaction import Transaction
 from . import db
-from datetime import datetime, UTC, timezone
+from datetime import datetime,timezone
 import pytz
 import json
 from sqlalchemy.exc import SQLAlchemyError
@@ -32,7 +32,7 @@ def dashboard():
         local_login_time = None  # or datetime.now(sa_timezone) or a friendly message you handle in template
 
     # Update last login time
-    current_user.last_login = datetime.now(UTC)
+    current_user.last_login = datetime.now(timezone.utc)
     db.session.commit()
 
     transactions_data = json.dumps([
