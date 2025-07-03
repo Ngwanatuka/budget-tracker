@@ -24,9 +24,12 @@ def dashboard():
     total_expenses = sum(t.amount for t in all_transactions if t.type == 'expense')
     total_balance = total_income - total_expenses
 
-    # convert last login to Johannesburg timezone
+    # convert last login to Johannesburg timezone, if it exists
     sa_timezone = pytz.timezone('Africa/Johannesburg')
-    local_login_time = current_user.last_login.astimezone(sa_timezone)
+    if current_user.last_login:
+        local_login_time = current_user.last_login.astimezone(sa_timezone)
+    else:
+        local_login_time = None  # or datetime.now(sa_timezone) or a friendly message you handle in template
 
     # Update last login time
     current_user.last_login = datetime.now(UTC)
