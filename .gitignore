@@ -3,3 +3,4 @@ app/.env
 app/budget.db
 instance/
 *.db
+instance/budget.db
