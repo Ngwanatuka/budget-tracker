@@ -107,7 +107,7 @@ def add_transaction():
             amount=amount,
             type=t_type,
             category=category,
-            date=datetime.now(UTC),
+            date=datetime.now(timezone.utc),
             user=current_user
         )
 
